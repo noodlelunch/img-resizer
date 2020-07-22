@@ -2,7 +2,7 @@ import os
 import sys
 from PIL import Image
 
-TARGET_MAX_DIMENSION = 1000 # desired max height or width of resized image in pixels
+TARGET_MAX_DIMENSION = 1080 # desired max height or width of resized image in pixels
 FILE_TYPES = ['.jpg', '.jpeg', '.png']
 
 if len(sys.argv) != 2:
