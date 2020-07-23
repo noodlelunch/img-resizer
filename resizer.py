@@ -2,7 +2,7 @@ import os
 import sys
 from PIL import Image
 
-TARGET_MAX_DIMENSION = 1080 # desired max height or width of resized image in pixels
+TARGET_XY_MAX = 1080 # desired max height AND width of resized image in pixels (new image should fit in a TARGET_XY_MAX x TARGET_XY_MAX box)
 FILE_TYPES = ['.jpg', '.jpeg', '.png']
 
 if len(sys.argv) != 2:
@@ -46,8 +46,8 @@ for file in file_list:
 
         # Now calculate the scaling ratio (only scale image down- not up)
         sr = 1.0
-        if orig_max_dimension > TARGET_MAX_DIMENSION:
-            sr = TARGET_MAX_DIMENSION/orig_max_dimension
+        if orig_max_dimension > TARGET_XY_MAX:
+            sr = TARGET_XY_MAX/orig_max_dimension
 
         # Resize and save it
         new_size = tuple(round(sr * x) for x in image.size)
