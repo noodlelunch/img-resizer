@@ -1,5 +1,6 @@
 import argparse
 import os
+import re
 import sys
 from PIL import Image
 
@@ -31,6 +32,11 @@ file_list = []
 print('Scanning files...')
 
 for root, dirnames, filenames in os.walk(source_image_path):
+    # Ignore directories we (probably) created so we don't re-resize images
+    if dirname_pattern.match(root):
+        dirnames[:] = []
+        filenames[:] = []
+
     for file in filenames:
         fname, fext = os.path.splitext(file)
         if fext.lower() in FILE_TYPES:
