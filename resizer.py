@@ -11,7 +11,12 @@ dirname_pattern = re.compile("^.+_resized_\d+x\d+$") # Used to skip directories 
 parser = argparse.ArgumentParser()
 parser.add_argument('path_to_images', help='path to directory of images to resize')
 
+parser.add_argument("-r", "--rename", help="Rename file(s) with file dimensions appended e.g. image.png -> image_100x200.png",
+                    action="store_true", default=False)
+
+# Extract args
 args = parser.parse_args()
+rename_files = args.rename
 
 source_image_path = args.path_to_images
 file_list = []
@@ -34,11 +39,8 @@ for file in file_list:
         print(f'Format: {image.format}')
         print(f'Size: {image.size}')
 
-        # Grab filename from file
-        resized_filename = os.path.basename(file)
-
         # Create the output directory if necessary
-        resize_dir = os.path.dirname(file) + '_resized'
+        resize_dir = f'{os.path.dirname(file)}_resized_{target_xy_max}x{target_xy_max}'
         if not os.path.exists(resize_dir):
             os.mkdir(resize_dir)
 
@@ -55,6 +57,15 @@ for file in file_list:
         new_size = tuple(round(sr * x) for x in image.size)
         print(f'Using scaling ratio of {sr}, resized image: {new_size}')
         new_image = image.resize(new_size)
+
+        # Grab filename from file and rename if requested
+        resized_filename = os.path.basename(file)
+
+        if rename_files:
+            root_ext = os.path.splitext(resized_filename)
+            resized_filename = f'{root_ext[0]}_{new_image.size[0]}x{new_image.size[1]}{root_ext[1]}'
+            print('resized_filename: ', resized_filename)
+
         new_image.save(os.path.join(resize_dir, resized_filename))
 
     except IOError as ioe:
