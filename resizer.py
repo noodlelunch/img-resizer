@@ -1,3 +1,4 @@
+import argparse
 import os
 import sys
 from PIL import Image
@@ -5,17 +6,18 @@ from PIL import Image
 TARGET_XY_MAX = 1080 # desired max height AND width of resized image in pixels (new image should fit in a TARGET_XY_MAX x TARGET_XY_MAX box)
 FILE_TYPES = ['.jpg', '.jpeg', '.png']
 
-if len(sys.argv) != 2:
-    print("Bro, try: 'python3 resizer.py <path-to-directory-of-images-to-resize>'")
-    print('Try again.')
-    sys.exit(-1) # sys.argv[0] is name of program
+dirname_pattern = re.compile("^.+_resized_\d+x\d+$") # Used to skip directories called foo_resized_1080x1080
 
-source_image_dir = sys.argv[1]
+parser = argparse.ArgumentParser()
+parser.add_argument('path_to_images', help='path to directory of images to resize')
 
+args = parser.parse_args()
+
+source_image_path = args.path_to_images
 file_list = []
 print('Scanning files...')
 
-for root, dirnames, filenames in os.walk(source_image_dir):
+for root, dirnames, filenames in os.walk(source_image_path):
     for file in filenames:
         fname, fext = os.path.splitext(file)
         if fext.lower() in FILE_TYPES:
