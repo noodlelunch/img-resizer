@@ -7,6 +7,8 @@ from PIL import Image
 FILE_TYPES = ['.jpg', '.jpeg', '.png']
 DEFAULT_RESAMPLE_FILTER = Image.LANCZOS
 resample_filter = DEFAULT_RESAMPLE_FILTER
+DEFAULT_QUALITY = 75 # 'quality' property used when saving jpegs. I assume this is ignored when saving pngs.
+quality = DEFAULT_QUALITY
 
 dirname_pattern = re.compile("^.+_resized_\d+x\d+$") # Used to skip directories called foo_resized_1080x1080
 
@@ -21,22 +23,33 @@ parser.add_argument("-r", "--rename", help="Rename file(s) with file dimensions 
 
 parser.add_argument("-b", "--use-bicubic", help="By default, for best quality we resize using a Lanczos (aka anti-alias) filter. You can try this if you run into issues.",
                     action="store_true", default=False)
+
+parser.add_argument("-q", "--max-quality", help="Default jpeg compression is 75. Using this flag sets it to 95, resulting in larger files, but slightly higher quality.",
+                    action="store_true", default=False)
+
 # Extract args
 args = parser.parse_args()
-rename_files = args.rename
+
 target_xy_max = args.xymax  # max height AND width of resized image in pixels (new image should fit in a target_xy_max x target_xy_max box)
+
+rename_files = args.rename
+
 if args.use_bicubic:
     resample_filter = Image.BICUBIC
 
+if args.max_quality:
+    quality = 95
+
 # Start...
-print(f'Resizing images to fit in {target_xy_max} x {target_xy_max} box')
+print(f'\nResizing images to fit in {target_xy_max} x {target_xy_max} box')
 print(f"Images will{'' if rename_files else ' not'} be renamed.")
 print(f"Downsampling using: {'bicubic' if args.use_bicubic else 'Lanczos'} filter")
+print(f"Saving jpegs using {'maximum quality (minimal compression)' if args.max_quality else 'standard quality'}")
 
 source_image_path = args.path_to_images
 
 file_list = []
-print('Scanning files...')
+print('\nScanning files...\n')
 
 for root, dirnames, filenames in os.walk(source_image_path):
     # Ignore directories we (probably) created so we don't re-resize images
@@ -92,7 +105,7 @@ for file in file_list:
             resized_filename = f'{root_ext[0]}_{new_image.size[0]}x{new_image.size[1]}{root_ext[1]}'
             print('resized_filename: ', resized_filename)
 
-        new_image.save(os.path.join(resize_dir, resized_filename))
+        new_image.save(os.path.join(resize_dir, resized_filename), quality=quality)
 
     except IOError as ioe:
         print(f'Unable to open file: {file}')
