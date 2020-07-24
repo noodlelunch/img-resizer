@@ -74,7 +74,7 @@ for file in file_list:
         print(f'Size: {image.size}')
 
         # Create the output directory if necessary
-        resize_dir = f'{os.path.dirname(file)}_resized_{target_xy_max}x{target_xy_max}'
+        resize_dir = f"{os.path.dirname(file)}{'_bicubic' if args.use_bicubic else ''}{'_max-quality' if args.max_quality else ''}_resized_{target_xy_max}x{target_xy_max}"
         if not os.path.exists(resize_dir):
             os.mkdir(resize_dir)
 
