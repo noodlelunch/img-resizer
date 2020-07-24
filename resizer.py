@@ -5,6 +5,8 @@ import sys
 from PIL import Image
 
 FILE_TYPES = ['.jpg', '.jpeg', '.png']
+DEFAULT_RESAMPLE_FILTER = Image.LANCZOS
+resample_filter = DEFAULT_RESAMPLE_FILTER
 
 dirname_pattern = re.compile("^.+_resized_\d+x\d+$") # Used to skip directories called foo_resized_1080x1080
 
@@ -17,14 +19,19 @@ parser.add_argument("-xy", "--xymax", help="Maximum X and Y dimensions of a box 
 parser.add_argument("-r", "--rename", help="Rename file(s) with file dimensions appended e.g. image.png -> image_100x200.png",
                     action="store_true", default=False)
 
+parser.add_argument("-b", "--use-bicubic", help="By default, for best quality we resize using a Lanczos (aka anti-alias) filter. You can try this if you run into issues.",
+                    action="store_true", default=False)
 # Extract args
 args = parser.parse_args()
 rename_files = args.rename
 target_xy_max = args.xymax  # max height AND width of resized image in pixels (new image should fit in a target_xy_max x target_xy_max box)
+if args.use_bicubic:
+    resample_filter = Image.BICUBIC
 
 # Start...
 print(f'Resizing images to fit in {target_xy_max} x {target_xy_max} box')
 print(f"Images will{'' if rename_files else ' not'} be renamed.")
+print(f"Downsampling using: {'bicubic' if args.use_bicubic else 'Lanczos'} filter")
 
 source_image_path = args.path_to_images
 
@@ -75,7 +82,7 @@ for file in file_list:
         # Resize and save it
         new_size = tuple(round(sr * x) for x in image.size)
         print(f'Using scaling ratio of {sr}, resized image: {new_size}')
-        new_image = image.resize(new_size)
+        new_image = image.resize(new_size, resample_filter)
 
         # Grab filename from file and rename if requested
         resized_filename = os.path.basename(file)
