@@ -62,6 +62,11 @@ for file in file_list:
         # First get the max(width, height) so we can scale the largest dimension
         orig_max_dimension = max(image.size)
 
+        # TODO: I think most of the resizing code can be replaced with .thumbnail()
+        # but I just learned about its existence and don't really feel like spending
+        # more time on this. Assuming it does what I think it does, it definitely
+        # seems like a reasonable change to make.
+
         # Now calculate the scaling ratio (only scale image down- not up)
         sr = 1.0
         if orig_max_dimension > target_xy_max:
