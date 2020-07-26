@@ -2,7 +2,7 @@
 img-resizer is a batch image resizer, written in Python.
 
 ### The Story
-I wrote this little tool when a friend called, asking me what he should use to resize a bunch of images for some volunteer work he was doing. I suggested a few things, then ended our conversation by pointing out that as an experienced developer himself, he could write one pretty quickly.
+I wrote this little tool when a friend called, asking me what he should use to resize a bunch of images for some volunteer work he was doing. I suggested a few things, then ended our conversation by pointing out that as an experienced developer, he could write one himself pretty quickly.
 
 
 Having been laid off during the coronavirus pandemic, it had been a while since I'd written any code, so I decided to write one for him. Of course I didn't tell my friend what I was doing, so I was racing against the clock, against him finding one of the bazillions of free resizers that I assured him must exist, and solving his one-off task. I knew I had no use for this.
