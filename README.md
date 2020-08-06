@@ -11,7 +11,7 @@ The problem was I had no idea what types of files my friend needed to resize, no
 
 > Supplied with a path to a directory of images, proportionally scale down all png or jpeg images it finds. Place these images in a directory named the same as the source directory, with "\_resized" appended to the name. Create this target directory at the same level as the source directory. Descend into any subdirectories and do the same thing. Images that are smaller than _xymax_ pixels don't get resized, but just get copied. In other words, we only scale down.
 
-_xymax_ is a single integer that represents the sides of a square into which your resized image will fit. In other words, if the image is portrait orientation, the resized image will be _xymax_ pixels tall. If it's landscape orientation, it will be _xymax_ pixels wide.
+_xymax_ is a single integer that represents the sides of a square into which your resized image will fit. In other words, if the image is portrait orientation, the resized image will be _xymax_ pixels tall. If it's landscape orientation, it will be _xymax_ pixels wide. Default value is 1080.
 
 So that was it. Probably less than 40 lines of actual code. It worked with my test directory of images and I sent it off to my friend, who, it turned out, still had yet to receive any images to resize.
 
